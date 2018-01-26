@@ -69,7 +69,7 @@ function add_card()
     csum=$(printf %d 0x$hex_csum)
     flags=0
     data=
-    guid="$(echo -n $timestamp | base64 | head -c 12)"
+    guid="$(echo -n "$timestamp$flds" | md5sum | head -c 12)"
 	noteid=$(sqlite3 "$FILE" "insert into notes (guid,mid,mod,usn,tags,flds,sfld,csum,flags,data) \
 		values('$guid',$mid,$mod,$usn,'$tags','$flds','$sfld',$csum,$flags,'$data'); select last_insert_rowid();")
 	# === INSERT CARD ===
@@ -96,7 +96,7 @@ function add_card()
 	ord=0
 	type=0
 	queue=0
-	due=484332854
+	due=$noteid
 	ivl=0
 	factor=0
 	reps=0
