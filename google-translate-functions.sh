@@ -68,7 +68,7 @@ function get_mp3()
 	fi
 	lang=$2
 	verify_lang "$lang" || return 4
-	if [[ "$lang" -eq "zh-TW" ]]; then
+	if [[ "$lang" == "zh-TW" ]]; then
 		lang=zh-CN
 	fi
 	term="$3"

@@ -69,9 +69,14 @@ function add_card()
     csum=$(printf %d 0x$hex_csum)
     flags=0
     data=
-    guid="$(echo -n "$timestamp$flds" | md5sum | head -c 12)"
+    guid="$(echo -n "$flds" | md5sum)"
 	noteid=$(sqlite3 "$FILE" "insert into notes (guid,mid,mod,usn,tags,flds,sfld,csum,flags,data) \
 		values('$guid',$mid,$mod,$usn,'$tags','$flds','$sfld',$csum,$flags,'$data'); select last_insert_rowid();")
+	# If we didn't get an id, assume that the card already exists
+	if [[ -z $noteid ]]; then
+		>&2 echo "NOTE ALREADY EXISTS $flds"
+		return
+	fi
 	# === INSERT CARD ===
 	# id: 1398130110964 - The card id, generate it randomly.
 	# nid: 1398130088495 - The note id this card is associated with.
