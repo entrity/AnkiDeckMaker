@@ -68,8 +68,13 @@ function get_mp3()
 	fi
 	lang=$2
 	verify_lang "$lang" || return 4
-	term="$(urlencode "$3")"
-	textlen=${#term}
+	if [[ "$lang" -eq "zh-TW" ]]; then
+		lang=zh-CN
+	fi
+	term="$3"
 	tk=${4-$(get_api_token "$term")} || return 5
+	textlen=${#term}
+	term="$(urlencode "$term")"
+	# E.g. https://translate.google.com/translate_tts?ie=UTF-8&q=%E5%90%83&tl=zh-CN&total=1&idx=0&textlen=1&tk=165961.321045&client=t&prev=input
 	curl "https://translate.google.com/translate_tts?ie=UTF-8&q=${term}&tl=${lang}&total=1&idx=0&textlen=${textlen}&tk=${tk}&client=t" -H 'Accept-Encoding: identity;q=1, *;q=0' -H 'User-Agent: Mozilla/5.0 (X11; CrOS x86_64 9901.77.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.97 Safari/537.36' -H 'Range: bytes=0-' -H 'chrome-proxy: frfr' -o "$outfile"
 }
