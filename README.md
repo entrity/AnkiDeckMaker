@@ -16,4 +16,4 @@ This application makes use of:
 
 - Bash
 - Node.js
-- google_translate_api (Node.js module)
+- google-translate-token (Node.js module)
