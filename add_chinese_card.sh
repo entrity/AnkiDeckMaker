@@ -32,13 +32,19 @@ function mp3src()
 }
 
 lineno=0
-while IFS=$'\t' read -r chin eng cmp3 emp3 || [[ -n "$chin" ]]; do
+while IFS=$'\t' read -r chinall engall cmp3 emp3 || [[ -n "$chin" ]]; do
+	if [[ -z "$chinall$engall$cmp3$emp3" ]]; then
+		echo "Breaking at blank line${chinall}${engall}${cmp3}${emp3}..."
+		break
+	fi
 	lineno=$(( $lineno + 1 ))
 	[[ -n "$eng" ]] && [[ -n "$cmp3" ]] && [[ -n "$emp3" ]]; updateline=$?
+	chin=$(sed -e 's/<br>.*//' <<< "$chinall")
 	if [[ -z "$chin" ]]; then
-		>&2 echo "No Chinese given in TSV entry"
+		>&2 echo "No Chinese given in TSV entry: $chin ($chinall)"
 		exit 1
 	fi
+	eng=$(sed -e 's/<br>.*//' -e 's/(.*)//g' <<< "$engall")
 	if [[ -z "$eng" ]]; then
 		eng=$(get_translation zh-TW en "$chin" | sed -e 's/^"//' -e 's/"$//')
 		echo "got translation $eng"
@@ -68,12 +74,13 @@ while IFS=$'\t' read -r chin eng cmp3 emp3 || [[ -n "$chin" ]]; do
 		fi
 	fi
 	if (($updateline)); then
-		sed -i -e "${lineno}s/.*/${chin}\t${eng}\t$cmp3\t$emp3$/" "$TSVFILE"
+		tsv="${chinall}\t${engall}\t${cmp3}\t${emp3}"
+		sed -i -e "${lineno}s/.*/${tsv//\//\\/}/" "$TSVFILE"
 	fi
 	# Update sqlite db
 	cmp3base="$(basename "$cmp3")"
 	emp3base="$(basename "$emp3")"
-	add_card "$DIR" "$chin[sound:$cmp3base]" "$eng[sound:$emp3base]"
+	add_card "$DIR" "$chinall[sound:$cmp3base]" "$engall[sound:$emp3base]"
 	# Update media file
 	ln -f "$cmp3" "$DIR/$(( $lineno * 2 - 1))"
 	ln -f "$emp3" "$DIR/$(( $lineno * 2 ))"
