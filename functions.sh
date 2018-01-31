@@ -8,6 +8,7 @@ function create_db()
 	mkdir -p "$DBDIR"
 	echo DBDIR $DBDIR
 	FILE="$DBDIR/$FNAME"
+	[[ -f "$FILE" ]] & rm "$FILE"
 	sqlite3 "$FILE" < schema.sqlite
 }
 
@@ -64,7 +65,7 @@ function add_card()
     usn=-1
     tags="$tags"
     flds="${front}$(printf '\x1f')${back}"
-    sfld=$(echo "$front" | perl -pe 's|<.*?>||g')
+    sfld=$(echo "$front" | sed 's/\[.*\]//g' | perl -pe 's|<.*?>||g')
     hex_csum=$(printf "$sfld" | sha1sum | head -c 8)
     csum=$(printf %d 0x$hex_csum)
     flags=0

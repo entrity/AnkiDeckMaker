@@ -24,7 +24,8 @@ CREATE TABLE notes (
     sfld            integer not null,      /* 7 */
     csum            integer not null,      /* 8 */
     flags           integer not null,      /* 9 */
-    data            text not null          /* 10 */
+    data            text not null,         /* 10 */
+    unique(guid)
 );
 CREATE TABLE cards (
     id              integer primary key autoincrement,   /* 0 */
