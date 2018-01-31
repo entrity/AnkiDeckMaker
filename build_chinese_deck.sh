@@ -80,8 +80,8 @@ while IFS=$'\t' read -r chinall engall cmp3 emp3 || [[ -n "$chin" ]]; do
 	# Update sqlite db
 	cmp3base="$(basename "$cmp3")"
 	emp3base="$(basename "$emp3")"
-	add_card "$DIR" "$chinall[sound:$cmp3base]" "$engall[sound:$emp3base]"
-	# Update media file
+	add_card "$DIR" "$chinall<br>[sound:$cmp3base]" "$engall<br>[sound:$emp3base]"
+	# Update media file, create media file of appropriate name in the source directory
 	ln -f "$cmp3" "$DIR/$(( $lineno * 2 - 1))"
 	ln -f "$emp3" "$DIR/$(( $lineno * 2 ))"
 	TJQ=$(jq ".[\"$(( $lineno * 2 - 1 ))\"]=\"$cmp3base\"" "$DIR/media")
