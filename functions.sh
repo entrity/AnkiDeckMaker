@@ -2,6 +2,7 @@
 
 FNAME="collection.anki2"
 
+# Make $DBDIR/collection.anki2 and create the (empty) sqlite tables
 function create_db()
 {
 	DBDIR="${1:-.}"
@@ -12,6 +13,7 @@ function create_db()
 	sqlite3 "$FILE" < schema.sqlite
 }
 
+# Add a deck to the db
 function create_deck()
 {
 	DBDIR="${1:-.}"
@@ -45,8 +47,6 @@ function add_card()
 	front="$2"
 	back="$3"
 	tags="$4"
-	echo front $front
-	echo back $back
 	timestamp=$(date +%s)
 	# === INSERT NOTE ===
 	# id: 1398130088495 - The note id, generate it randomly.
@@ -110,10 +110,12 @@ function add_card()
 	left=0
 	odue=0
 	odid=0
-	sqlite3 "$FILE" "insert into cards \
+	cardid=$(sqlite3 "$FILE" "insert into cards \
 		(nid, did, ord, mod, usn, type, queue, due, ivl, factor, reps, lapses, left, odue, odid, flags, data) \
 		values \
-		($nid, $did, $ord, $mod, $usn, $type, $queue, $due, $ivl, $factor, $reps, $lapses, $left, $odue, $odid, $flags, '$data');"
+		($nid, $did, $ord, $mod, $usn, $type, $queue, $due, $ivl, $factor, $reps, $lapses, $left, $odue, $odid, $flags, '$data'); \
+		select last_insert_rowid();")
+	echo -e "$noteid\t$cardid"
 }
 
 function zip_db()
@@ -121,6 +123,6 @@ function zip_db()
 	local cwd=$(pwd)
 	DBDIR="${1:-.}"
 	cd "$DBDIR"
-	zip -r "$cwd/$DBDIR.apkg" *
+	zip -r "$cwd/$DBDIR.apkg" * >/dev/null
 	cd "$cwd"
 }
