@@ -1,0 +1,19 @@
+{
+  "name": "anki-deck-maker",
+  "description": "Build and rebuild Anki flashcard decks.",
+  "version": "0.0.0",
+  "dependencies": {
+    "google-translate-token": "^1.0.0"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/entrity/AnkiDeckMaker.git"
+  },
+  "author": "entrity",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/entrity/AnkiDeckMaker/issues"
+  },
+  "homepage": "https://github.com/entrity/AnkiDeckMaker#readme"
+}
