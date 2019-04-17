@@ -17,3 +17,9 @@ This application makes use of:
 - Bash
 - Node.js
 - google-translate-token (Node.js module)
+
+# On Chromebook
+
+`export PYTHONIOENCODING=UTF-8` allows Python to interpret and print Chinese characters.
+`export LANG=en_US.UTF-8` allows terminal to interpret and print Chinese characters.
+
