@@ -1,0 +1,7 @@
+node_modules
+*.pyc
+*.sqlite3
+*.mp3
+*.log
+*.json
+
