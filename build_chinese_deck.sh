@@ -97,7 +97,7 @@ while IFS=$'\b' read -r lesson chinall engall cmp3 emp3 noteid cardid || [[ -n "
 		lastid=$noteid
 	fi
 	# Update TSV file
-	tsv="${chinall:-$chin}\t${engall:-$eng}\t${cmp3}\t${emp3}\t${noteid}\t${cardid}"
+	tsv="$lesson\t${chinall:-$chin}\t${engall:-$eng}\t${cmp3}\t${emp3}\t${noteid}\t${cardid}"
 	sed -i -e "${lineno}s/.*/${tsv//\//\\/}/" "$TSVFILE"
 done < <(cat "$TSVFILE" | tr $'\t' $'\b') # This is a kludge because read will squeeze sequences of whitespaces (tabs) and treat them as one, which ruins my line if I have a blank value followed by a non-blank value
 
