@@ -3,7 +3,8 @@
   "description": "Build and rebuild Anki flashcard decks.",
   "version": "0.0.0",
   "dependencies": {
-    "google-translate-token": "^1.0.0"
+    "google-translate-token": "^1.0.0",
+    "package-lock.json": "^1.0.0"
   },
   "devDependencies": {},
   "repository": {

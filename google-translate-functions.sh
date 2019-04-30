@@ -62,7 +62,7 @@ function get_mp3()
 {
 	check_args $# 3 || return 1
 	outfile="$1"
-	if ! [[ $outfile =~ \.mp3$ ]]; then
+	if ! [[ $outfile =~ \.mp3$ ]] && ! [[ $outfile =~ ^[0-9]+$ ]]; then
 		>&2 echo "outfile needs to have mp3 extension: $outfile"
 		return 4
 	fi
