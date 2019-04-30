@@ -44,8 +44,8 @@ function add_card()
 {
 	DBDIR="$1"
 	FILE="$DBDIR/$FNAME"
-	front="$2"
-	back="$3"
+	front="${2//\'/\\\'}"
+	back="${3//\'/\\\'}"
 	tags="$4"
 	timestamp=$(date +%s)
 	# === INSERT NOTE ===

@@ -11,7 +11,7 @@ else
 	>&2 echo Nodejs is not installed but is a dependency. Please install.
 	return 4
 fi
-LANGUAGES=(en ja zh-TW)
+LANGUAGES=(en ja zh-TW zh-CN)
 # zh-TW is Chinese (Traditional)
 
 function check_args()
@@ -33,12 +33,12 @@ function verify_lang()
 
 function get_api_token()
 {
-	$NODE_EXEC -e "require('google-translate-token').get('$1').then(function(obj){console.log(obj.value)})" || return 5
+	$NODE_EXEC -e "require('google-translate-token').get('${1//\'/\\\'}').then(function(obj){console.log(obj.value)})" || return 5
 }
 
 function urlencode()
 {
-	python3 -c "import urllib.parse;print(urllib.parse.quote('$1'))"
+	python3 -c "import urllib.parse;print(urllib.parse.quote('${1//\'/\\\'}'))"
 }
 
 # get_translation <srclang> <dstlang> <term>

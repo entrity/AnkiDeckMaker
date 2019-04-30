@@ -32,7 +32,7 @@ function mp3src()
 
 lastid=0
 lineno=0
-while IFS=$'\b' read -r chinall engall cmp3 emp3 noteid cardid || [[ -n "$chin" ]]; do
+while IFS=$'\b' read -r lesson chinall engall cmp3 emp3 noteid cardid || [[ -n "$chin" ]]; do
 	lineno=$(( $lineno + 1 )) # Used with 'sed' to update the TSV for the current line only
 	if [[ -z "$chinall$engall$cmp3$emp3" ]]; then # This is a skippable (blank) line
 		echo "Breaking at blank line${chinall}${engall}${cmp3}${emp3}..."
@@ -55,9 +55,15 @@ while IFS=$'\b' read -r chinall engall cmp3 emp3 noteid cardid || [[ -n "$chin" 
 	if [[ -z "$cmp3" ]]; then
 		cmp3="$(mp3src $chin)"
 	fi
+	if ! [[ $cmp3 =~ .mp3$ ]]; then
+		cmp3=$cmp3.mp3
+	fi
+		echo chin $chin
+		echo cmp3 $cmp3
 	if ! [[ -s "$cmp3" ]]; then
-		echo "Downloading Chinese to $cmp3"
-		get_mp3 "$cmp3" zh-TW "$chin"
+		echo "Downloading Chinese to $cmp3 --->"
+		echo "get_mp3 \"$cmp3\" zh-CN \"$chin\""
+		get_mp3 "$cmp3" zh-CN "$chin"
 		if (($?)); then
 			>&2 echo "Error getting Chinese mp3 for $chin"
 			exit 1
@@ -69,6 +75,7 @@ while IFS=$'\b' read -r chinall engall cmp3 emp3 noteid cardid || [[ -n "$chin" 
 	fi
 	if ! [[ -s "$emp3" ]]; then
 		echo "Downloading English to $emp3"
+		echo get_mp3 "$emp3" en "$eng"
 		get_mp3 "$emp3" en "$eng"
 		if (($?)); then
 			>&2 echo "Error getting English mp3 for $eng"
@@ -78,7 +85,10 @@ while IFS=$'\b' read -r chinall engall cmp3 emp3 noteid cardid || [[ -n "$chin" 
 	# Update sqlite db
 	cmp3base="$(basename "$cmp3")"
 	emp3base="$(basename "$emp3")"
-	IFS=$'\t' read -r noteid cardid < <(add_card "$DIR" "$chinall<br>[sound:$cmp3base]" "$engall<br>[sound:$emp3base]")
+	IFS=$'\t' read -r noteid cardid < <(add_card "$DIR" "$chinall<br>[sound:$cmp3base]" "$engall<br>[sound:$emp3base]" "Lesson $lesson")
+	if [[ -z $noteid ]]; then
+		continue
+	fi
 	if [[ $lastid -ge $noteid ]]; then
 		>&2 echo "ERR in db. lastid $lastid noteid $noteid"
 		exit
